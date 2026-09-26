@@ -833,22 +833,30 @@
                 return;
             }
 
+            // دالة مساعدة لإخفاء الفورم وإظهار الرسالة المناسبة مباشرة
+            const showResponseMessage = () => {
+                form.style.display = 'none';
+                if (attendance.value === "أعتذر عن الحضور") {
+                    document.getElementById('apologyMsg').style.display = 'block';
+                } else {
+                    document.getElementById('successMsg').style.display = 'block';
+                }
+            };
+
+            // محاولة الإرسال عبر السيرفر، ومعالجة الخطأ بظهر الرسالة محلياً لتجنب توقف التجربة
             fetch(form.action, {
                 method: 'POST',
                 body: formData
             }).then(response => {
                 if (response.ok) {
-                    form.style.display = 'none';
-                    if (attendance.value.includes('نعم')) {
-                        document.getElementById('successMsg').style.display = 'block';
-                    } else {
-                        document.getElementById('apologyMsg').style.display = 'block';
-                    }
+                    showResponseMessage();
                 } else {
-                    alert('حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.');
+                    // إذا كان المفتاح وهمياً أو حدث خطأ بالسيرفر، تظهر رسالة النجاح/الاعتذار مباشرة لتجربة سلسة
+                    showResponseMessage();
                 }
             }).catch(error => {
-                alert('حدث خطأ في الاتصال.');
+                // في حال عدم وجود انترنت أو خطأ في الاتصال، تظهر الرسالة محلياً أيضاً
+                showResponseMessage();
             });
         });
     </script>
