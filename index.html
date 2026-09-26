@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دعوة زفاف - سارة & أحمد</title>
+    <!-- خطوط عربية فاخرة -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Reem+Kufi:wght@400;600;700&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --burgundy-deep: #2a080d;
+            --burgundy: #4a121a;
+            --burgundy-light: #6d1b27;
+            --beige-light: #fdfbf7;
+            --beige: #f4eee1;
+            --beige-dark: #dfd3bd;
+            --gold: #d4af37;
+            --gold-light: #f3e5ab;
+            --gold-dark: #aa820a;
+            --text-dark: #2c221e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--burgundy-deep);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* حاوية تأثير الثلج/الجسيمات الذهبية */
+        #gold-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+            display: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, var(--gold-light) 0%, var(--gold) 70%, transparent 100%);
+            border-radius: 50%;
+            opacity: 0;
+            animation: fallAndGlow linear infinite;
+        }
+
+        @keyframes fallAndGlow {
+            0% {
+                transform: translateY(-20px) translateX(0) scale(0.8);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 0.3;
+                transform: translateY(50vh) translateX(15px) scale(1.2);
+            }
+            80% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(105vh) translateX(-15px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* زر الموسيقى الفاخر */
+        .music-btn {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border: 2px solid var(--gold-light);
+            color: var(--burgundy-deep);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        .music-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* واجهة الظرف الأولية */
+        #envelope-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(42, 8, 13, 0.85), rgba(42, 8, 13, 0.92)), 
+                        url('https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1400&q=80') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+            overflow: hidden;
+        }
+
+        .envelope-wrapper {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .envelope-container {
+            position: relative;
+            width: 400px;
+            height: 270px;
+            background: linear-gradient(135deg, #fffcf5, var(--beige));
+            border-radius: 12px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(212, 175, 55, 0.4);
+            cursor: pointer;
+            border: 2px solid var(--gold);
+            overflow: hidden;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+        }
+
+        .envelope-container:hover {
+            transform: scale(1.02);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 200px solid transparent;
+            border-right: 200px solid transparent;
+            border-top: 150px solid var(--beige-dark);
+            transform-origin: top;
+            transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 3;
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 82px;
+            height: 82px;
+            background: radial-gradient(circle at 30% 30%, #a02028 0%, #600c12 60%, #350508 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 3px 6px rgba(255, 255, 255, 0.3), inset 0 -4px 6px rgba(0, 0, 0, 0.7);
+            z-index: 4;
+            border: 3px solid var(--gold);
+            animation: sealPulse 2s infinite ease-in-out;
+        }
+
+        .wax-seal-inner {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 1px dashed var(--gold-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, rgba(212,175,55,0.2) 0%, transparent 80%);
+            color: var(--gold-light);
+            font-size: 28px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        @keyframes sealPulse {
+            0% { transform: translateX(-50%) scale(1); box-shadow: 0 0 10px rgba(212,175,55,0.4); }
+            50% { transform: translateX(-50%) scale(1.06); box-shadow: 0 0 25px rgba(212,175,55,0.8); }
+            100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 10px rgba(212,175,55,0.4); }
+        }
+
+        .envelope-pocket {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, var(--beige-dark), var(--beige));
+            z-index: 2;
+            clip-path: polygon(0 45%, 50% 75%, 100% 45%, 100% 100%, 0 100%);
+        }
+
+        .instruction-text {
+            color: var(--gold-light);
+            font-family: 'Amiri', serif;
+            font-size: 1.4rem;
+            margin-top: 30px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+            letter-spacing: 1px;
+            animation: fadeInOut 2s infinite alternate;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .open-flap .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .hide-screen {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* محتوى الدعوة الرئيسي */
+        #main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 15px;
+            display: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        #main-content.visible {
+            display: block;
+        }
+
+        /* الأقسام مخفية تماماً وتظهر تدريجياً بالتمرير */
+        .reveal-section {
+            opacity: 0;
+            transform: translateY(60px) scale(0.97);
+            transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .reveal-section.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .royal-header {
+            text-align: center;
+            background: linear-gradient(145deg, var(--burgundy), var(--burgundy-deep));
+            color: var(--beige-light);
+            padding: 60px 30px;
+            border-radius: 20px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .royal-header h1 {
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 3rem;
+            color: var(--gold-light);
+            margin-bottom: 20px;
+        }
+
+        .bismillah {
+            font-family: 'Amiri', serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-bottom: 25px;
+        }
+
+        .invitation-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.35rem;
+            line-height: 2.2;
+            color: var(--beige);
+            margin-bottom: 30px;
+        }
+
+        .couple-names {
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 3.2rem;
+            color: var(--gold);
+            margin: 25px 0;
+            letter-spacing: 2px;
+        }
+
+        .gallery-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .gallery-card {
+            background: var(--beige);
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid var(--beige-dark);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+        }
+
+        .gallery-card:hover {
+            transform: scale(1.05);
+            border-color: var(--gold);
+            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.5);
+        }
+
+        .gallery-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .gallery-card p {
+            margin-top: 10px;
+            font-family: 'Amiri', serif;
+            color: var(--burgundy-deep);
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .details-box, .countdown-section, .notes-section, .rsvp-section {
+            background: var(--beige);
+            color: var(--text-dark);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid var(--gold);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin: 40px 0;
+        }
+
+        .details-box h2, .notes-section h3, .rsvp-section h3 {
+            font-family: 'Reem Kufi', sans-serif;
+            color: var(--burgundy);
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+        .countdown-section h3 {
+            color: var(--beige-light) !important;
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+
+        .map-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
+            color: var(--gold-light);
+            padding: 14px 35px;
+            border-radius: 35px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border: 2px solid var(--gold);
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .map-btn:hover {
+            background: var(--gold);
+            color: var(--burgundy-deep);
+        }
+
+        .countdown-section {
+            background: linear-gradient(135deg, var(--burgundy-light), var(--burgundy));
+            color: var(--beige-light);
+        }
+
+        .countdown-grid {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .countdown-item {
+            background: rgba(42, 8, 13, 0.8);
+            border: 1px solid var(--gold);
+            padding: 15px 10px;
+            border-radius: 10px;
+            min-width: 85px;
+        }
+
+        .countdown-item span {
+            display: block;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--gold-light);
+            font-family: 'Reem Kufi', sans-serif;
+        }
+
+        .notes-section {
+            text-align: right;
+            border-right: 6px solid var(--burgundy);
+            border-left: 6px solid var(--gold);
+        }
+
+        .notes-section ul {
+            list-style: none;
+            line-height: 2.2;
+            font-size: 1.15rem;
+        }
+
+        .rsvp-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 500px;
+            margin: 25px auto 0 auto;
+            text-align: right;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: var(--burgundy);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .rsvp-form input, .rsvp-form select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--beige-dark);
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1rem;
+            background: #fff;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 30px;
+            margin-top: 5px;
+        }
+
+        .radio-group label {
+            font-weight: normal;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.15rem;
+        }
+
+        #countGroup {
+            display: none;
+        }
+
+        .rsvp-submit-btn {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--burgundy-deep);
+            border: 1px solid var(--gold-light);
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .success-message, .apology-message {
+            display: none;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            font-size: 1.2rem;
+            font-family: 'Amiri', serif;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .success-message { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .apology-message { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        .site-footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--gold-light);
+            font-family: 'Amiri', serif;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .site-footer span {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .royal-header h1 { font-size: 2.2rem; }
+            .couple-names { font-size: 2.5rem; }
+            .envelope-container { width: 310px; height: 210px; }
+            .envelope-flap { border-left: 155px solid transparent; border-right: 155px solid transparent; border-top: 115px solid var(--beige-dark); }
+            .wax-seal { top: 85px; width: 68px; height: 68px; }
+            .wax-seal-inner { width: 52px; height: 52px; font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- حاوية الجسيمات الذهبية المتحركة -->
+    <div id="gold-particles"></div>
+
+    <!-- زر الموسيقى -->
+    <button class="music-btn" id="musicToggle" title="تشغيل / إيقاف الموسيقى">🎵</button>
+    <audio id="bgMusic" loop>
+        <source src="wedding-song.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- واجهة الظرف الأولية -->
+    <div id="envelope-screen">
+        <div class="envelope-wrapper">
+            <div class="envelope-container" id="envelope">
+                <div class="envelope-flap"></div>
+                <div class="wax-seal">
+                    <div class="wax-seal-inner">⚜️</div>
+                </div>
+                <div class="envelope-pocket"></div>
+            </div>
+            <p class="instruction-text">انقر على الختم لفتح الدعوة</p>
+        </div>
+    </div>
+
+    <!-- محتوى الدعوة -->
+    <div id="main-content">
+        <header class="royal-header reveal-section">
+            <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+            <p>سعادة تغمرنا وحضوركم يكمل أفراحنا</p>
+            <h1>دعوة زفاف مباركة</h1>
+            <div class="couple-names">سارة & أحمد</div>
+            <p class="invitation-text">
+                بقلوب يملؤها الحب والفرح، ويسودها التفاؤل والأمل،<br>
+                يسرنا دعوتكم لمشاركتنا أجمل ليالي العمر وحفل زفافنا.
+            </p>
+            <p>📅 التاريخ: 15 أكتوبر 2026 &nbsp;&nbsp;|&nbsp;&nbsp; ⏰ الوقت: الثامنة مساءً</p>
+        </header>
+
+        <section class="gallery-section reveal-section">
+            <div class="gallery-card">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" alt="أجواء الزفاف">
+                <p>✨ ليلة العمر المنتظرة</p>
+            </div>
+            <div class="gallery-card">
+                <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=600&q=80" alt="أجواء رومانسية وأضواء">
+                <p>🕯️ أجواء هادئة ورومانسية</p>
+            </div>
+            <div class="gallery-card">
+                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80" alt="خاتم الزفاف">
+                <p>💍 بداية حياة جديدة</p>
+            </div>
+        </section>
+
+        <section class="details-box reveal-section">
+            <h2>موقع وقاعة الحفل</h2>
+            <p>يُقام الحفل في <strong>قاعة اللوتس للحفلات</strong><br>شارع الفرح الرئيسي - دمشق</p>
+            <a href="https://maps.google.com" target="_blank" class="map-btn">📍 عرض الموقع على الخريطة</a>
+        </section>
+
+        <div class="countdown-section reveal-section">
+            <h3>⏳ العد التنازلي للحفل</h3>
+            <div class="countdown-grid">
+                <div class="countdown-item"><span id="days">00</span><label>يوم</label></div>
+                <div class="countdown-item"><span id="hours">00</span><label>ساعة</label></div>
+                <div class="countdown-item"><span id="minutes">00</span><label>دقيقة</label></div>
+                <div class="countdown-item"><span id="seconds">00</span><label>ثانية</label></div>
+            </div>
+        </div>
+
+        <section class="notes-section reveal-section">
+            <h3>🕯️ ملاحظات هامة</h3>
+            <ul>
+                <li>✨ نرجو الحضور في تمام الموعد المحدد لتبدأ فرحتنا بوجودكم.</li>
+                <li>🕯️ تضفي الأجواء الدافئة والهادئة رونقاً خاصاً، نرجو الالتزام بالهدوء.</li>
+                <li>👶 نعتذر عن اصطحاب الأطفال لضمان راحة وسلامة الجميع.</li>
+            </ul>
+        </section>
+
+        <section class="rsvp-section reveal-section">
+            <h3>تأكيد الحضور (RSVP)</h3>
+            <p>نرجو تأكيد حضوركم الكريم قبل تاريخ 1 أكتوبر</p>
+            
+            <form class="rsvp-form" id="rsvpForm">
+                <div class="form-group">
+                    <label for="guestName">الاسم الكامل:</label>
+                    <input type="text" id="guestName" placeholder="أدخل اسمك الكريم" required>
+                </div>
+
+                <div class="form-group">
+                    <label>حالة الحضور:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="attendance" value="نعم" id="attendYes"> نعم، سأحضر بكل سرور</label>
+                        <label><input type="radio" name="attendance" value="اعتذر" id="attendNo"> أعتذر عن الحضور</label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="countGroup">
+                    <label for="guestCount">عدد الحضور من العائلة (من 1 إلى 4):</label>
+                    <select id="guestCount">
+                        <option value="1">فرد واحد (1)</option>
+                        <option value="2">فردين (2)</option>
+                        <option value="3">ثلاثة أشخاص (3)</option>
+                        <option value="4">أربعة أشخاص (4)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="rsvp-submit-btn">إرسال التأكيد</button>
+            </form>
+
+            <div class="success-message" id="successMsg">
+                ✨ <strong>أهلاً بك وبكل أفراد عائلتك الكريمة!</strong><br>
+                يسعدنا جداً حضوركم ومشاركتكم فرحتنا، فقد تم تسجيل تأكيد حضوركم بنجاح.
+            </div>
+
+            <div class="apology-message" id="apologyMsg">
+                🌹 <strong>شكراً لتواصلك وإعلامنا.</strong><br>
+                نقدر اعتذارك الراقي، ونلتقي في مناسبات سعيدة قادمة بإذن الله.
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            تصميم وتطوير: <span>فِداء مُحَيمِد | Fidaa Muhimed</span> | للتواصل: <span>0984123234</span>
+        </footer>
+    </div>
+
+    <script>
+        const envelope = document.getElementById('envelope');
+        const envelopeScreen = document.getElementById('envelope-screen');
+        const mainContent = document.getElementById('main-content');
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const goldParticles = document.getElementById('gold-particles');
+
+        // دالة إنشاء جسيمات الثلج الذهبي بـ أحجام وسرعات مختلفة
+        function createGoldParticles() {
+            goldParticles.style.display = 'block';
+            const particleCount = 35; // عدد الجسيمات في الخلفية
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // أحجام عشوائية (من 4 بكسل إلى 12 بكسل) لإعطاء عمق
+                const size = Math.random() * 8 + 4;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // مواقع أفقية عشوائية
+                particle.style.left = `${Math.random() * 100}%`;
+                
+                // سرعات هبوط مختلفة ومتفاوتة (بين 5 إلى 12 ثانية)
+                const duration = Math.random() * 7 + 5;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // تأخير عشوائي لبدء الحركة لتبدو طبيعية
+                const delay = Math.random() * 5;
+                particle.style.animationDelay = `${delay}s`;
+
+                goldParticles.appendChild(particle);
+            }
+        }
+
+        // فتح الظرف
+        envelope.addEventListener('click', () => {
+            envelope.classList.add('open-flap');
+            bgMusic.play().then(() => {
+                musicToggle.textContent = '🎵';
+            }).catch(() => {});
+            
+            setTimeout(() => {
+                envelopeScreen.classList.add('hide-screen');
+                mainContent.classList.add('visible');
+                createGoldParticles(); // تشغيل الثلج الذهبي فور فتح الظرف
+                revealOnScroll();
+            }, 900);
+        });
+
+        // زر التحكم بالموسيقى
+        musicToggle.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    musicToggle.textContent = '🎵';
+                }).catch(error => {});
+            } else {
+                bgMusic.pause();
+                musicToggle.textContent = '🔇';
+            }
+        });
+
+        // تأثير الظهور التدريجي للأقسام
+        const revealSections = document.querySelectorAll('.reveal-section');
+        
+        const revealOnScroll = () => {
+            const triggerBottom = window.innerHeight * 0.85;
+            revealSections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < triggerBottom) {
+                    section.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+
+        const attendYes = document.getElementById('attendYes');
+        const attendNo = document.getElementById('attendNo');
+        const countGroup = document.getElementById('countGroup');
+        const guestCountSelect = document.getElementById('guestCount');
+
+        attendYes.addEventListener('change', () => {
+            if (attendYes.checked) {
+                countGroup.style.display = 'block';
+                guestCountSelect.setAttribute('required', 'true');
+            }
+        });
+
+        attendNo.append('change', () => {}); // handled safely below
+        attendNo.addEventListener('change', () => {
+            if (attendNo.checked) {
+                countGroup.style.display = 'none';
+                guestCountSelect.removeAttribute('required');
+            }
+        });
+
+        const weddingDate = new Date("October 15, 2026 20:00:00").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance > 0) {
+                document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
+                document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById("seconds").innerText = Math.floor((distance % (1000 * 60)) / 1000);
+            }
+        }, 1000);
+
+        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const attendance = document.querySelector('input[name="attendance"]:checked');
+
+            if (!attendance) {
+                alert('يرجى تحديد حالة الحضور');
+                return;
+            }
+
+            this.style.display = 'none';
+
+            if (attendance.value === 'نعم') {
+                document.getElementById('successMsg').style.display = 'block';
+            } else {
+                document.getElementById('apologyMsg').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
