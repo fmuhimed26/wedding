@@ -682,7 +682,6 @@
             
             <form class="rsvp-form" id="rsvpForm" action="https://api.web3forms.com/submit" method="POST">
                 <input type="hidden" name="access_key" value="35feb6fc-752c-4328-8d60-b08ceada65c9">
-                <!-- إعداد عنوان البريد ليظهر بالعربي تماماً -->
                 <input type="hidden" name="subject" value="رد جديد على دعوة الزفاف">
 
                 <div class="form-group">
@@ -701,6 +700,7 @@
                 <div class="form-group" id="countGroup">
                     <label for="guestCount">عدد الحضور من العائلة:</label>
                     <select id="guestCount" name="عدد_الأفراد">
+                        <option value="غير محدد" selected>اختر عدد الأفراد</option>
                         <option value="1">فرد واحد (1)</option>
                         <option value="2">فردين (2)</option>
                         <option value="3">ثلاثة أشخاص (3)</option>
@@ -795,21 +795,20 @@
         const countGroup = document.getElementById('countGroup');
         const guestCountSelect = document.getElementById('guestCount');
 
-        // عند اختيار الحضور: يظهر حقل عدد الأفراد ويسجله ويجعله مطلوباً
+        // عند اختيار الحضور: يظهر حقل عدد الأفراد ونجعله مطلوباً
         attendYes.addEventListener('change', () => {
             if (attendYes.checked) {
                 countGroup.style.display = 'block';
                 guestCountSelect.setAttribute('required', 'true');
-                guestCountSelect.removeAttribute('disabled');
             }
         });
 
-        // عند اختيار الاعتذار: يتم إخفاء حقل عدد الأفراد وتعطيله تماماً لكي لا يُرسل ضمن البيانات
+        // عند اختيار الاعتذار: يتم إخفاء الحقل وإعادة تعيين قيمته ودون تعطيله لكي يتم إرسال البيانات بسلاسة
         attendNo.addEventListener('change', () => {
             if (attendNo.checked) {
                 countGroup.style.display = 'none';
                 guestCountSelect.removeAttribute('required');
-                guestCountSelect.setAttribute('disabled', 'true');
+                guestCountSelect.value = "أعتذر عن الحضور (لا يوجد أفراد)";
             }
         });
 
@@ -845,7 +844,6 @@
                 }
             };
 
-            // استخدام FormData لجمع الحقول النشطة فقط (التي لم يتم تعطيلها)
             const formData = new FormData(form);
 
             fetch(form.action, {
