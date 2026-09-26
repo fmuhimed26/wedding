@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -249,6 +250,7 @@
             display: block;
         }
 
+        /* تأثير الظهور التدريجي */
         .reveal-section {
             opacity: 0;
             transform: translateY(40px) scale(0.97);
@@ -471,6 +473,7 @@
             background: #fff;
         }
 
+        /* تعديل خيارات الحضور لتصبح تحت بعضها تماماً والكتابة في سطر واحد */
         .radio-group {
             display: flex;
             flex-direction: column;
@@ -485,10 +488,11 @@
             align-items: center;
             gap: 10px;
             font-size: 1rem;
-            white-space: nowrap;
+            white-space: nowrap; /* منع التفاف النص ونطقه في سطر واحد */
             width: fit-content;
         }
 
+        /* تكبير زر الـ Radio قليلاً لسهولة النقر على الهواتف */
         .radio-group input[type="radio"] {
             width: 18px;
             height: 18px;
@@ -682,25 +686,23 @@
             
             <form class="rsvp-form" id="rsvpForm" action="https://api.web3forms.com/submit" method="POST">
                 <input type="hidden" name="access_key" value="35feb6fc-752c-4328-8d60-b08ceada65c9">
-                <input type="hidden" name="subject" value="رد جديد على دعوة الزفاف">
 
                 <div class="form-group">
                     <label for="guestName">الاسم الكامل:</label>
-                    <input type="text" id="guestName" name="اسم_الضيف" placeholder="أدخل اسمك الكريم" required>
+                    <input type="text" id="guestName" name="name" placeholder="أدخل اسمك الكريم" required>
                 </div>
 
                 <div class="form-group">
                     <label>حالة الحضور:</label>
                     <div class="radio-group">
-                        <label><input type="radio" name="حالة_الحضور" value="نعم، سأحضر بكل سرور" id="attendYes" required> نعم، سأحضر بكل سرور</label>
-                        <label><input type="radio" name="حالة_الحضور" value="أعتذر عن الحضور" id="attendNo"> أعتذر عن الحضور</label>
+                        <label><input type="radio" name="attendance" value="نعم، سأحضر بكل سرور" id="attendYes" required> نعم، سأحضر بكل سرور</label>
+                        <label><input type="radio" name="attendance" value="أعتذر عن الحضور" id="attendNo"> أعتذر عن الحضور</label>
                     </div>
                 </div>
 
                 <div class="form-group" id="countGroup">
                     <label for="guestCount">عدد الحضور من العائلة:</label>
-                    <select id="guestCount" name="عدد_الأفراد">
-                        <option value="غير محدد" selected>اختر عدد الأفراد</option>
+                    <select id="guestCount" name="guest_count">
                         <option value="1">فرد واحد (1)</option>
                         <option value="2">فردين (2)</option>
                         <option value="3">ثلاثة أشخاص (3)</option>
@@ -795,7 +797,6 @@
         const countGroup = document.getElementById('countGroup');
         const guestCountSelect = document.getElementById('guestCount');
 
-        // عند اختيار الحضور: يظهر حقل عدد الأفراد ونجعله مطلوباً
         attendYes.addEventListener('change', () => {
             if (attendYes.checked) {
                 countGroup.style.display = 'block';
@@ -803,12 +804,10 @@
             }
         });
 
-        // عند اختيار الاعتذار: يتم إخفاء الحقل وإعادة تعيين قيمته ودون تعطيله لكي يتم إرسال البيانات بسلاسة
         attendNo.addEventListener('change', () => {
             if (attendNo.checked) {
                 countGroup.style.display = 'none';
                 guestCountSelect.removeAttribute('required');
-                guestCountSelect.value = "أعتذر عن الحضور (لا يوجد أفراد)";
             }
         });
 
@@ -828,7 +827,8 @@
         document.getElementById('rsvpForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const form = this;
-            const attendance = document.querySelector('input[name="حالة_الحضور"]:checked');
+            const formData = new FormData(form);
+            const attendance = document.querySelector('input[name="attendance"]:checked');
 
             if (!attendance) {
                 alert('يرجى تحديد حالة الحضور');
@@ -844,13 +844,15 @@
                 }
             };
 
-            const formData = new FormData(form);
-
             fetch(form.action, {
                 method: 'POST',
                 body: formData
             }).then(response => {
-                showResponseMessage();
+                if (response.ok) {
+                    showResponseMessage();
+                } else {
+                    showResponseMessage();
+                }
             }).catch(error => {
                 showResponseMessage();
             });
